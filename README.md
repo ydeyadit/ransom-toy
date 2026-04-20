@@ -8,6 +8,8 @@ Tal llave se cifra asimetricamente con otra llave rsa y se le deja como un `toke
 Para obtener (descifrar) la llave,la victima debe devolver el token al atacante, quien lo desencripta con su llave rsa privada y se la regresa a la víctima.
 Esta a su vez con el mismo script de cifrado procede a descifrar sus archivos.
 Después,todos son felices.
+PERO AUNQUE SEA UN JUGUETE EL SCRIPT CIFRA EN VERDAD,Y SI EXISTE UN ERROR,POR EJEMPLO,AL COPIAR Y PEGAR YA SEA AL TOKEN O LA CLAVE PRIVADA,SI ES EL TOKEN, LA LLAVE OBTENIDA NO SERÁ LA CORRECTA PARA DESCIFRAR, Y SI ES LA LLAVE PUBLICA, AL MOMENTO DE DESCIFRAR LA LLAVE FERNET OCURRIRÁ UN ERROR, EN CUALQUIERA DE LOS 2 CASOS, EL RESULTADO ES QUE NO SE PODRÁN DESCIFRAR LOS ARCHIVOS.
+**EN OTRAS PALABRAS,ÚSALO CON RESPONSABILIDAD!!!** 
 
 ---
 
@@ -33,7 +35,7 @@ LLAVE_PUBLICA_ATACANTE = b"""
 """
 ...
 
-Con esta clave se cifrará el `token`
+Con esta clave se cifrará la llave Fernet, misma que cifrará los archivos, creando así el `token`
 
 ## Paso 3
 
@@ -43,40 +45,38 @@ Con esta clave se cifrará el `token`
 
 ```
   python3 ransom-cypher.py -h
-    usage: ransom-cypher.py [-h] --modo {cifrar,descifrar} [--key KEY]
-                            [--self-destruct]
-                            ruta sufijo
+    uso: ransom-cypher.py [-h] --modo {cifrar,descifrar} [--key KEY] [--self-destruct] ruta sufijo
 
     Simulador de Ransomware Híbrido Multiplataforma
 
-    positional arguments:
+    argumentos posicionales :
       ruta                  Ruta objetivo
       sufijo                Extensión (ej: .txt)
 
-    options:
-      -h, --help            show this help message and exit
+    opciones :
+      -h, --help            muéstra la ayuda.
       --modo, -m {cifrar,descifrar}
-      --key, -k KEY         Llave Fernet (solo necesaria para descifrar)
+      --key, -k KEY         Llave Fernet descifrada(solo necesaria para descifrar)
       --self-destruct, -sd  Borrar el script tras la ejecución
 ```
 
 - El script cifra recursivamente en una ruta dada los archivos con el sufijo especificado y al alcance de los permisos del usuario 'víctima', y lo hace a la velocidad de python.
 - El script se deja en un cronjob o en una tarea programada o se ejecuta directamente y -sd elimina al propio script.
-- Elimina o vacia registros (otra vez) al alcance de los permisos del usuario, como el historial de python o el de la shell en uso, cosa que se puede extender a necesidad.
+- Elimina o vacia registros, (otra vez) al alcance de los permisos del usuario, como el historial de python o el de la shell en uso, cosa que se puede extender a necesidad.
 - Deja una nota `HELLO_FRIEND.txt` (mi originalidad no tiene parangón) en el escritorio o el equivalente al home del usuario (según el sistema,unix-like o windowsero) o en el directorio/carpeta desde donde se llama al script.
 - El contenido de la nota y su formateo puede ser alterado, pero recomiendo no tocar(toKar) `{token}`
-- El mismo script `ransom-cypher.py` se emplea para descifrar los archivos. El argumento `--self-destruct` se emplea tanto en el ataque como en el rescate, despues de todo, no queremos dejar basura en una computadora ajena.
+- El mismo script `ransom-cypher.py` se emplea para descifrar los archivos. El argumento `--self-destruct` se emplea tanto en el ataque como en el rescate, después de todo, no queremos dejar basura en una computadora ajena.
 - `--key` acepta la llave Fernet con la que se creó el token.
 - El token es la llave cifrada con la que se encriptaron los archivos.
-- Tal llave se creó en el momento del ataque con la llave pública.pem.
+- Tal llave se creó en el momento del ataque con la llave pública.pem (**ASEGURATE DE COPIARLA Y PEGARLA SIN ERRORES!!!**).
 - La idea es que se guarda en memoria, o sea que se pierde tan pronto exista un reinicio del equipo.
-- Esto la hace ineficiente para un ataque real.
-- Por tal motivo, ESTE SCRIPT EN UN JUGETE Y NADA MÁS...ajá
+- Esto la hace ineficiente para un ataque real, porque si no reincias, la llave estará en memoria.
+- Por tal motivo, ESTE SCRIPT EN UN JUGETE Y NADA MÁS...un juguete que cifra/encripta de verdad.
 
 ## Paso 4
 
 - El ataque sucede.La víctima se apanica cuando descubre que sus archivos se abren como si fueran texto y todos cuentan historias en lenguas desconocidas... o sea, los descubre cifrados, se apanica y encuentra la nota en su home/Escritorio/o en donde sea que se plantó el script (otra vez,en cualquier lugar al alcanze de sus p...pe...per...permisos.)
-- Junta los 2 dolares del rescate y siguiendo las instrucciones en la nota nos devuelve el token.
+- Junta las 2 koronas noruegas del rescate y siguiendo las instrucciones en la nota nos devuelve el token.
 
 ## Paso 5
 
